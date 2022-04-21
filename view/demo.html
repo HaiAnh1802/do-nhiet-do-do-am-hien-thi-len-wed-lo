@@ -1,0 +1,289 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IOT</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+    <script src="jquery.js"></script>
+    <script src="socket.io/socket.io.js"></script>
+    <!-- <script src="https://www.chartjs.org/samples/latest/utils.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.0.1/chart.min.js" integrity="sha512-2uu1jrAmW1A+SMwih5DAPqzFS2PI+OPw79OVLS4NJ6jGHQ/GmIVDDlWwz4KLO8DnoUmYdU8hTtFcp8je6zxbCg==" crossorigin="anonymous"></script>
+    <script>
+
+
+        var socket = io("http://localhost:3000");
+    
+    
+        // var temp_arr = [0, 0, 0, 0, 0, 0];
+        // var humi_arr = [0, 0, 0, 0, 0, 0];
+        
+        
+        // var temp_arr = [];
+        // var humi_arr = [];
+    
+        socket.on("status", function(data){
+            var data_sensors = JSON.parse(data);
+            console.log(data_sensors);
+            console.log(data_sensors['temp'])
+            console.log(data_sensors['humi'])
+            document.getElementById("nhietdo").innerHTML = data_sensors['temp'];
+            document.getElementById("doam").innerHTML = data_sensors['humi'];
+            
+            var idx = 0;
+            for(idx = 0; idx < 12; idx++){
+                temp_arr[idx] = temp_arr[idx + 1];
+            }
+            temp_arr[12] = data_sensors['temp'];
+    
+            idx = 0;
+            for(idx = 0; idx < 12; idx++){
+                humi_arr[idx] = humi_arr[idx + 1];
+            }
+            humi_arr[12] = data_sensors['humi'];
+    
+            chart_update(myChart);
+            
+        });
+    
+        
+    
+    
+    
+        // document.getElementById("nhietdo").innerHTML = datanhietdo;
+    
+        // $('#anhden').click(function(){
+        //     clicked;
+        // });
+    
+    
+        //mqtt
+        
+    
+    
+        var led_status = 0; //den tat
+    
+        function clicked_toggle(){
+    
+            if (led_status == 1){
+                led_status = 0;
+            }else{
+                led_status = 1;
+            }
+    
+            if (led_status > 0){
+                document.getElementById("iconden").src = "./light.png";
+                document.getElementById("trangthailed").innerHTML= "ĐÈN BẬT";
+                socket.emit("led_status", "on");
+            }else{
+                document.getElementById("iconden").src = "./light_off.png";
+                document.getElementById("trangthailed").innerHTML= "ĐÈN TẮT";
+                socket.emit("led_status", "off");
+            }
+            
+            console.log(led_status);
+        };
+    
+        
+        
+        setInterval(function(){
+            socket.emit("temphumi_require", "need");
+        }, 5000)
+    
+        
+    
+    </script>
+   
+
+</head>
+<body>
+    
+   
+    <header>
+        <div style = "background-color: #363636" class="row ">
+            <div class="col-md-5">
+                <h3 class="text-center text-white ">Điều khiển thiết bị</h3>
+            </div>
+        </div>
+    </header>
+
+    
+    <main style = "background-color:#CFCFCF" >
+        <div class="container"style = "background-color:#CFCFCF"  >
+            <h1 class="mt-6" >Status Node1</h1>
+            <!-- <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item active">Dashboard</li>
+            </ol> -->
+            <div class="row">
+                <div class="col-xl-6 col-md-6">
+                    <div class="row">
+                        <div class="col-xl-6 col-md-12">
+                            <div class="card bg-danger text-white mb-4">
+                                <div class="card-body text-center">
+                                    <img src="./celsius.png" alt="Vietjack Homepage" width="25" height="25"/> 
+                                    Nhiệt độ
+                                </div>
+                                
+                                <div class="card-footer d-flex align-items-center  justify-content-between">
+                                    <p id="nhietdo" class="" style="font-size: 50px;">
+                                    30
+                                    </p>
+                                    <!-- <div class="small text-white"><i class="text-center"></i></div> -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-6 col-md-12">
+                            <div class="card bg-info text-white mb-4">
+                                <div class="card-body text-center">
+                                    <img src="./humidity.png" alt="Vietjack Homepage" width="25" height="25"/>  
+                                     Độ ẩm</div>
+                                <div class="card-footer d-flex align-items-center justify-content-between">
+                                    <p id="doam" style="font-size: 50px;">30</p>
+                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-6 col-md-12">
+                            <div class="card bg-warning text-white mb-4">
+                                <div class="card-body text-center">
+                                 <img src="./sun1.png" alt="Vietjack Homepage" width="25" height="25"/>
+                                    Ánh sáng</div>
+                                <div class="card-footer d-flex align-items-center justify-content-between">
+                                    <p id="doam" style="font-size: 50px;">30</p>
+                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-6 col-md-12">
+                            <div class="card bg-success text-white mb-4">
+                                <div class="card-body text-center">
+                                    <img src="./wind.png" alt="Vietjack Homepage" width="25" height="25"/>
+                                    Tốc độ quạt</div>
+                                <div class="card-footer d-flex align-items-center justify-content-between">
+                                    <p id="doam" style="font-size: 50px;">30</p>
+                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+
+                <div class="col-xl-6 -md-6">
+                    <div class="container">
+                        <div class="constainer bg-light ">
+                            <p class="text-center text-uppercase bg-secondary p-3 text-warning rounded">Bảng điều khiển</p>
+                        </div>
+                        <div class="d-flex justify-content-around">
+                            <div class="col-xl-6 col-md-6">
+                                    <button type="button" class="btn " onclick="clicked_toggle()">
+                                            <img id="iconden" src="./light.png" alt=""  width="50" height="50">
+                                        </button>
+                                        
+                                        <div>
+                                            <h2 id="trangthailed" class="">ĐÈN TẮT</h2>
+                                        </div>
+
+                            </div>
+                           
+
+                           
+                              
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+               
+    
+                    
+                   
+            </div>
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-chart-area mr-1"></i>
+                            Area Chart
+                        </div class = "row" style = "height: 200px">
+                            <div class="col-lg-12">
+                                <canvas id="myChart"></canvas>
+                                <script>
+
+                                    var temp_arr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+                                    var humi_arr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+                                    function chart_update(chart){
+                                        chart.data.datasets[0].data = temp_arr;
+                                        chart.data.datasets[1].data = humi_arr;
+                                    
+                                        chart.update();
+                                    }
+
+                                    var ctx = document.getElementById('myChart').getContext('2d');
+                                    var myChart = new Chart(ctx, {
+                                        type: 'line',
+                                        data: {
+                                            labels: ['-60s', '-55s', '-50s', '-45s', '-40s', '-35s', '-30s', '-25s', '-20s', '-15s', '-10s', '-5s', '0s'],
+                                            datasets: [{
+                                                label: 'Tempature',
+                                                data: [],
+                                                backgroundColor: ["red"],
+                                                borderColor: ["red"],
+                                                borderWidth: 1
+                                            },{
+                                                label: 'Humidity',
+                                                data: [],
+                                                backgroundColor: ["blue"],
+                                                borderColor: ["blue"],
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            scales: {
+                                                y: {
+                                                    beginAtZero: true
+                                                }
+                                            }
+                                        }
+                                    });
+
+                                    
+                                </script>
+                                
+                            </div>
+
+                            
+
+
+                            
+                                
+                    
+                            <!-- </div> -->
+                    </div>
+                </div>
+                
+            </div>
+            
+        </div>
+    </main>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+
+
+</html>

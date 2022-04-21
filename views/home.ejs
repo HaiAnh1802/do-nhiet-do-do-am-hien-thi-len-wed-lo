@@ -1,0 +1,299 @@
+
+<html >
+    <head>   
+        <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IOT</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+    <script src="jquery.js"></script>
+    <script src="socket.io/socket.io.js"></script>
+    <!-- <script src="https://www.chartjs.org/samples/latest/utils.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.0.1/chart.min.js" integrity="sha512-2uu1jrAmW1A+SMwih5DAPqzFS2PI+OPw79OVLS4NJ6jGHQ/GmIVDDlWwz4KLO8DnoUmYdU8hTtFcp8je6zxbCg==" crossorigin="anonymous"></script>
+        <!-- <script src="Chart.min.js"></script>
+        <script src="utils.js"></script>  -->
+        <style>
+  
+        </style>
+    </head>
+    <body>
+        <header>
+            <div style = "background-color: #363636" class="row ">
+                <div class="col-md-5">
+                    <h3 class="text-center text-white ">Điều khiển thiết bị</h3>
+                </div>
+            </div>
+        </header>
+    
+        
+        <main style = "background-color:#CFCFCF" >
+            <div class="container-fluid"style = "background-color:#CFCFCF"  >
+                <h1 class="mt-6" >Status Node1</h1>
+                <!-- <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item active">Dashboard</li>
+                </ol> -->
+               
+                <div class="row " style="margin-top: 30px;">
+                    
+                            <div class="col-12 col-lg-6 col-xl-3">
+                                <div class="card text-white mb-4" style="background-color: #EE6363;">
+                                    <div class="card-body text-center" style="font-size: 30px;">
+                                        <img src="/icon/temp.png" alt="" width="35" height="35"/> 
+                                        Nhiệt độ
+                                    </div>
+                                    
+                                    <div class="card-footer text-center " style="font-size: 50px; ">
+            
+                                        <p id="data-temp" class="" style="font-size: 50px; " >
+                                                     30
+                                        </p>
+                                        <!-- <div class="small text-white"><i class="text-center"></i></div> -->
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="col-12 col-lg-6 col-xl-3">
+                                <div class="card text-white mb-4" style = "background-color:  #00C5CD;">
+                                    <div class="card-body text-center" style="font-size: 30px;">
+                                        <img src="/icon/humidity.png" alt="" width="35" height="35"/>  
+                                         Độ ẩm</div>
+                                    <div class="card-footer text-center">
+                                        <p id="data-humi" style="font-size: 50px;">30</p>
+                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="col-12 col-lg-6 col-xl-3">
+                                <div class="card text-white mb-4"  style = "background-color:  #9BCD9B;">
+                                    <div class="card-body text-center" style="font-size: 30px;">
+                                     <img src="/icon/clock.png" alt="Vietjack Homepage" width="35" height="35"/>
+                                        Thời gian</div>
+                                    <div class="card-footer text-center">
+                                        <p id="thoigian" style="font-size: 50px;">30</p>
+                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="col-12 col-lg-6 col-xl-3">
+                                <div class="card  text-white mb-4" style="background-color: #EEC591;">
+                                    <div class="card-body text-center" style="font-size: 30px;">
+                                        <img src="/icon/admin.png" alt="Vietjack Homepage" width="35" height="35" />
+                                          Admin</div>
+                                    <div class="card-footer text-center">
+                                        <p id="doam" style="font-size: 50px;">Lê Hải Anh</p>
+                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 50px;">
+                                
+                        <div class="col-12 col-lg-6" style="background-color: #FFFFFF;" >
+                            <div class="container" >
+                                <div class="constainer">
+                                    <h3 class="text-center text-uppercase p-2 rounded"style="background-color: #F5F5F5;">Status</h3>
+                                </div>
+                            <div>
+
+                                
+                            </div>
+                                <div class="d-flex justify-content-around" style="margin-top: 100px;">
+        
+                                    <button type="button" class="btn btn-info  " styke="" onclick="clicked_toggle()">
+                                        <img id="iconden" src="/icon/lightoff.png" width="50" height="50">
+                                    </button>
+            
+                                    <div>
+                                        <h2 id="trangthailed" class="text-center">ĐÈN TẮT</h2>
+                                    </div>
+                                    </br>
+                                    <button type="button" class="btn btn-info " onclick="clicked_toggle1()">
+                                        <img id="iconquat" src="/icon/fanoff.png" width="50" height="50">
+                                    </button>
+            
+                                    <div>
+                                        <h2 id="trangthaiquat" class="text-center">QUẠT TẮT</h2>
+                                    </div>
+        
+                                </div>
+
+                            </div>
+                            
+                        </div>  
+
+                        <div class="col-xl-6">
+                            <div class="card ">
+                                <div class="card-header">
+                                    <i class="fas fa-chart-area mr-1"></i>
+                                    Area Chart
+                                </div class = "row" style = "height: 200px">
+                                    <div class="col-md-12">
+                                        <canvas id="myChart"></canvas>
+                                        <script>
+        
+                                            var temp_arr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    
+                                            var humi_arr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    
+                                            function chart_update(chart){
+                                                chart.data.datasets[0].data = temp_arr;
+                                                chart.data.datasets[1].data = humi_arr;
+    
+                                                chart.update();
+                                            }
+    
+                                            var ctx = document.getElementById('myChart').getContext('2d');
+                                            var myChart = new Chart(ctx, {
+                                                type: 'line',
+                                                data: {
+                                                    labels: ['0s', '1s', '2s', '3s', '4s', '5s', '6s', '7s', '8s', '9s', '10s', '11s', '12s'],
+                                                    datasets: [{
+                                                        label: 'Nhiệt độ',
+                                                        data: [],
+                                                        backgroundColor: ["red"],
+                                                        borderColor: ["red"],
+                                                        borderWidth: 1
+                                                    },{
+                                                        label: 'Độ ẩm',
+                                                        data: [],
+                                                        backgroundColor: ["blue"],
+                                                        borderColor: ["blue"],
+                                                        borderWidth: 1
+                                                    }]
+                                                },
+                                                options: {
+                                                    scales: {
+                                                        y: {
+                                                            beginAtZero: true
+                                                        }
+                                                    }
+                                                }
+                                            });
+    
+                                                
+                                            
+                                        </script>
+                                        
+                                    </div>    
+                            
+                                    </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                </div> 
+                        
+                    </div>
+
+                        </div>
+                    </div>
+                    
+                    
+    
+           
+            
+
+            
+          
+            
+        </main>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script>
+
+
+        //Led
+        var led_status = 0; //den tat
+        var Fan_status = 2;
+        function clicked_toggle(){
+
+            if (led_status == 1){
+                led_status = 0;
+            }else{
+                led_status = 1;
+            }
+
+            if (led_status > 0){
+                document.getElementById("iconden").src = "/icon/lighton.png";
+                document.getElementById("trangthailed").innerHTML= "ĐÈN BẬT";
+                socket.emit("led_status", "1");
+            }else{
+                document.getElementById("iconden").src = "/icon/lightoff.png";
+                document.getElementById("trangthailed").innerHTML= "ĐÈN TẮT";
+                socket.emit("led_status", "0");
+            }
+            
+           // console.log(led_status);
+
+            
+        };
+        function clicked_toggle1(){
+            if (Fan_status == 3){
+                Fan_status = 2;
+            }else{
+                Fan_status = 3;
+            }
+
+            if (Fan_status > 2){
+                document.getElementById("iconquat").src = "/icon/fanon.png";
+                document.getElementById("trangthaiquat").innerHTML= "QUẠT BẬT";
+                socket.emit("Fan_status", "3");
+            }else{
+                document.getElementById("iconquat").src = "/icon/fanoff.png";
+                document.getElementById("trangthaiquat").innerHTML= "QUẠT TẮT";
+                socket.emit("Fan_status", "2");
+            }
+            //console.log(Fan_status);
+        };
+        //line chart
+
+     
+        // document.getElementById("data-temp").innerHTML = 50;
+        // document.getElementById("data-humi").innerHTML = 60;
+        var socket = io("http://localhost:5000");
+
+     
+        
+        socket.on("data_sensors", function(data){
+            var data_sensors = JSON.parse(data);
+             console.log(data);
+            // console.log(typeof(data));
+            document.getElementById("data-temp").innerHTML = data_sensors[0].temp;
+            document.getElementById("data-humi").innerHTML = data_sensors[0].humi;
+            document.getElementById("thoigian").innerHTML = data_sensors[0].updtime;
+            var idx = 0;
+            for(idx = 0; idx < 12; idx++){
+                temp_arr[idx] = temp_arr[idx + 1];
+            }
+            temp_arr[12] = data_sensors[0].temp;
+    
+            idx = 0;
+            for(idx = 0; idx < 12; idx++){
+                humi_arr[idx] = humi_arr[idx + 1];
+            }
+            humi_arr[12] = data_sensors[0].humi;
+    
+            chart_update(myChart);
+
+        });
+        //5s preforment 1 lan
+        setInterval(function(){
+            socket.emit("yeucau", "temphumi");
+        }, 5000)
+
+      
+      
+
+        
+
+    </script>
+      
+    </body>
+    </html>
+    
